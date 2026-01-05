@@ -11,22 +11,40 @@ project(gradeSystem LANGUAGES CXX)
 add_executable(gradeSystem
     #math.cpp                              # 模块实现单元
     main.cpp
+
 )
 
 set(MODULE_INTERFACE_FILES
     #${MODULE_LIB_DIR1}/utils.cppm         #添加模块库的模块接口单元
     #math.cppm                             # 模块接口单元
+)
+
+set(UI_FILES
+    #进行IO操作的模块
+
+)
+
+set(CONTROL_FILES
+    #控制器模块，用于放置System最高层次管理函数
+)
+
+set(DOMAIN_FILES
+    #放各种基类
     person.cppm
     student.cppm
     teacher.cppm
+    class.cppm
 )
 
 source_group("Module Interfaces" FILES ${MODULE_INTERFACE_FILES})
+source_group("ui" FILES ${UI_FILES})
+source_group("control" FILES ${CONTROL_FILES})
+source_group("domain" FILES ${DOMAIN_FILES})
 target_sources(gradeSystem  PRIVATE FILE_SET cxx_modules TYPE CXX_MODULES
     BASE_DIRS                              # 配置BASE_DIRS，用于组织构建输出目录，以便构建不同目录中(同名的)模块文件.
         #${MODULE_LIB_DIR1}
         ${CMAKE_CURRENT_SOURCE_DIR}
-    FILES ${MODULE_INTERFACE_FILES}
+    FILES ${MODULE_INTERFACE_FILES} ${UI_FILES} ${CONTROL_FILES} ${DOMAIN_FILES}
 )
 target_compile_features(gradeSystem PRIVATE cxx_std_23)
 
