@@ -12,6 +12,7 @@ add_executable(gradeSystem
     #math.cpp                              # 模块实现单元
     main.cpp
 
+
 )
 
 set(MODULE_INTERFACE_FILES
@@ -26,6 +27,7 @@ set(UI_FILES
 
 set(CONTROL_FILES
     #控制器模块，用于放置System最高层次管理函数
+    system.cppm
 )
 
 set(DOMAIN_FILES

@@ -1,3 +1,8 @@
+// Module   person
+// File: person.cpp   Version: 0.1.0   License: AGPLv3
+// Created: YuHaoRan      2026-01-16 14:56:48
+// Description:基类人，有姓名、年龄、性别三个属性
+//
 export module person;
 import std;
 
@@ -20,7 +25,6 @@ private:
 
 Person::Person(string name,int age,string gender):m_name(name),m_age(age),m_gender(gender)
 {
-
 }
 
 Person::~Person(){}

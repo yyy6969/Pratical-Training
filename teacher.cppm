@@ -1,8 +1,14 @@
+// Module teacher
+// File: teacher.cpp   Version: 0.1.0   License: AGPLv3
+// Created: YuHaoRan      2026-01-16 14:54:38
+// Description:老师类，老师进行对课程的授课，其实相当于学生的选课
+//
 export module teacher;
 import std;
 import person;
 
-using std::string;
+using std::string; using std::shared_ptr;
+using std::vector;
 
 export class Teacher:public Person
 {
@@ -11,7 +17,7 @@ public:
     ~Teacher();
 private:
     string m_tid;//老师id
-    string m_class;//所教的课程
+    vector<std::shared_ptr<class Course>> m_arranged_courses;//所教的课程
 };
 
 Teacher::Teacher(string name,int age,string gender,string id)

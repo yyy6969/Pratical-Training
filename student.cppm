@@ -1,19 +1,23 @@
+// Module   student
+// File: student.cpp   Version: 0.1.0   License: AGPLv3
+// Created: YuHaoRan      2026-01-16 14:55:54
+// Description:学生类，进行选课操作
+//
 export module student;
 import std;
 import person;
 
 using std::string; using std::vector;
+using std::shared_ptr;
 
 export class Student : public Person
 {
 public:
     Student(string name,int age,string gender,string id);
-    void choseClass
+    void choseClass();
 private:
     string m_sid;
-    double final_grade;
-    double midian;
-    vector<double> hm_grade;
+    vector<std::shared_ptr<class Course>> m_selected_courses;//所选的课程
 };
 
 Student::Student(string name,int age,string gender,string id)
