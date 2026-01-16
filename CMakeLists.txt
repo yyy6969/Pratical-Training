@@ -20,6 +20,13 @@ set(MODULE_INTERFACE_FILES
     #math.cppm                             # 模块接口单元
 )
 
+set(OPERATE_FILES
+    #进行选取课程和安排课程的模块
+    enrollment.cppm
+    relationbroker.cppm
+    studentbroker.cppm
+)
+
 set(UI_FILES
     #进行IO操作的模块
 
@@ -42,11 +49,12 @@ source_group("Module Interfaces" FILES ${MODULE_INTERFACE_FILES})
 source_group("ui" FILES ${UI_FILES})
 source_group("control" FILES ${CONTROL_FILES})
 source_group("domain" FILES ${DOMAIN_FILES})
+source_group("operate" FILES ${OPERATE_FILES})
 target_sources(gradeSystem  PRIVATE FILE_SET cxx_modules TYPE CXX_MODULES
     BASE_DIRS                              # 配置BASE_DIRS，用于组织构建输出目录，以便构建不同目录中(同名的)模块文件.
         #${MODULE_LIB_DIR1}
         ${CMAKE_CURRENT_SOURCE_DIR}
-    FILES ${MODULE_INTERFACE_FILES} ${UI_FILES} ${CONTROL_FILES} ${DOMAIN_FILES}
+    FILES ${MODULE_INTERFACE_FILES} ${UI_FILES} ${CONTROL_FILES} ${DOMAIN_FILES} ${OPERATE_FILES}
 )
 target_compile_features(gradeSystem PRIVATE cxx_std_23)
 

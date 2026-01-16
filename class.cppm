@@ -16,6 +16,7 @@ export class Class
 {
 public:
     Class(string csName,string csId,double credit);
+    string getid() const;//读取课程号
 private:
     string m_courseName;
     string m_courseId;
@@ -31,4 +32,9 @@ Class::Class(string csName,string csId,double credit)
 :m_courseName(csName),m_courseId(csId),m_credit(credit)
 {
     cm_totalCount++;//课程数量加一
+}
+
+string Class::getid() const
+{
+    return m_courseId;
 }

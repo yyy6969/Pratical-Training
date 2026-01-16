@@ -14,7 +14,7 @@ export class Student : public Person
 {
 public:
     Student(string name,int age,string gender,string id);
-    void choseClass();
+    string getStudentId() const;
 private:
     string m_sid;
     vector<std::shared_ptr<class Course>> m_selected_courses;//所选的课程
@@ -24,4 +24,8 @@ Student::Student(string name,int age,string gender,string id)
 :Person(name,age,gender),m_sid(id)
 {
     std::print("创建学生用户\n");
+}
+string Student::getStudentId() const
+{
+    return m_sid;
 }
