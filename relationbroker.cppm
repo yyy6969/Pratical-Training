@@ -12,18 +12,18 @@ import Class;
 
 using std::shared_ptr; using std::vector;
 
-export class Relationbroker
+export class relationBroker
 {
 public:
-    Relationbroker();
+    relationBroker();
     shared_ptr<Class> findCourseById(cid,vector<shared_ptr<Class>> courseList);//studen
 private:
 };
 
-Relationbroker::Relationbroker()
+relationBroker::relationBroker()
 {}
 
-shared_ptr<Class> Relationbroker::findCourseById(cid,vector<shared_ptr<Class>>courseList);
+shared_ptr<Class> relationBroker::findCourseById(cid,vector<shared_ptr<Class>>courseList);
 {
     for(const auto& claPtr : courseList)
     {

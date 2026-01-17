@@ -20,8 +20,10 @@ public:
     static System& singletonSystem();
     vector<Student>& getStudentList();
     const vector<Student>& getStudentListConst() const;// 获取学生列表,只读，防止误修改
+    vector<Teacher>& getTeacherList();
+    const vector<Teacher>& getTeacherListConst() const;//获得老师列表
     vector<Class>& getCourseLis();
-    const vector<Class>& getCourseListConst();//获取学生列表，只读
+    const vector<Class>& getCourseListConst();//获取课程列表，只读
 
 
 
@@ -49,6 +51,15 @@ vector<Student>& System::getStudentList()
 const vector<Student>& getStudentListConst() const
 {
     return _studentList;//获得只读数组，用于ui模块
+}
+
+vector<Teacher>& getTeacherList()
+{
+    return _teacherList;
+}
+const vector<Teacher>& getTeacherListConst() const
+{
+    return _teacherList;
 }
 
 vector<Class>& System::getCourseLis()

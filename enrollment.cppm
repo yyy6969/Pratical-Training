@@ -16,7 +16,7 @@ using std::shared_ptr
 export class Enrollment
 {
 public:
-    Enrollment(System& sys);//全部用id来实现查找
+    Enrollment(System& sys);//初始化函数
     static Enrollment& singletonEnroll();
     void studentEnrollCourse(string sid,string cid);//完成学生添加课程
 private:

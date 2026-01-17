@@ -11,7 +11,7 @@ project(gradeSystem LANGUAGES CXX)
 add_executable(gradeSystem
     #math.cpp                              # 模块实现单元
     main.cpp
-
+    sqlDB.cppm
 
 )
 
@@ -25,6 +25,8 @@ set(OPERATE_FILES
     enrollment.cppm
     relationbroker.cppm
     studentbroker.cppm
+    teacherbroker.cppm
+    arrangement.cppm
 )
 
 set(UI_FILES

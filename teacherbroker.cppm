@@ -1,0 +1,36 @@
+// Module   teacherBroker
+// File: teacherbroker.cpp   Version: 0.1.0   License: AGPLv3
+// Created: YuHaoRan      2026-01-17 15:06:02
+// Description:老师类的查找模块，单独实现为一个类
+//
+export module teacherbroker;
+import std:
+import relationbroker;
+
+using std::vector; using std::string;
+using std::shared_ptr; using std::weak_ptr;
+
+export class teacherBroker:public relationbroker
+{
+public:
+    teacherBroker();
+    shared_ptr<Teacher> findTeacherById(string tid,vector<shared_ptr<Teacher>> teacherList);//查找老师ID
+private:
+};
+
+shared_ptr<Teacher> teacherBroker::findTeacherById(string tid,vector<shared_ptr<Teacher>> teacherList)
+{
+    for(const auto& teaPtr : teacherList)
+    {
+        if(!teaPtr)
+        {
+            continue;
+        }
+
+        if(teaPtr->getTeacherId() == tid)
+        {
+            std::print("成功找到老师：ID={}\n",tid)
+            return teaPtr;
+        }
+    }
+}
