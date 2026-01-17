@@ -18,6 +18,8 @@ export class System
 public:
     System();
     static System& singletonSystem();
+    //void exec() 执行函数
+
     vector<Student>& getStudentList();
     const vector<Student>& getStudentListConst() const;// 获取学生列表,只读，防止误修改
     vector<Teacher>& getTeacherList();

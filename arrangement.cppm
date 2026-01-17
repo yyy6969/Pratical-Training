@@ -16,7 +16,7 @@ public:
     void teacherArrangeCourse();
 private:
     vector<shared_ptr<Class>> _courseList;
-    vector<share_ptr<Teahcer>> _teacherList
+    vector<share_ptr<Teacher>> _teacherList
 };
 
 Arrangement::Arrangement(System& sys)

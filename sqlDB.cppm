@@ -14,9 +14,15 @@ export class operationToDB
 {
 public:
     operationToDB(string name,string user,string password);
-    void createStudentTable();//创建学生表
-    void createTeacherTable();//创建老师表
-    void createCourseTable();//创建课程表
+
+    void createAllTables();  // 一键创建学生、教师、课程表
+
+    // 插入课程：指定课程ID(字符型)、课程编号、课程名、学分
+    bool insertCourse(const string& course_id, const string& course_no, const string& course_name, double credit);
+    // 插入学生：指定学号、姓名、年龄、性别、关联课程ID列表
+    bool insertStudent(const string& student_no, const string& name, int age, const string& gender, const vector<string>& course_ids = {});
+    // 插入教师：指定教师编号、姓名、年龄、性别、关联课程ID
+    bool insertTeacher(const string& teacher_no, const string& name, int age, const string& gender, const string& course_id = "");
 private:
     pqxx::connection getConnection();//连接数据库函数
     string m_dbname;
@@ -39,75 +45,54 @@ pqxx::connection operationToDB::getConnection()
     }else {
         cout << "Can't open database" << endl;
     }
+    return C;
 }
 
-void operationToDB::createStudentTable()
+void operationToDB::createAllTables()
 {
     try {
         auto conn = getConnection();
         pqxx::work txn(conn);
 
-        string sql = R"(
-           CREATE TABLE IF NOT EXISTS courses (
-               id SERIAL PRIMARY KEY,
-               course_name VARCHAR(100) NOT NULL UNIQUE,
-               credit NUMERIC(3,1) CHECK (credit >= 0)
-           );
-       )";
+        // 1. 创建学生表
+        string create_student_sql = R"(
+            CREATE TABLE IF NOT EXISTS students (
+                id VARCHAR(50) NOT NULL PRIMARY KEY,  -- 学生ID（字符型，用户指定）
+                name VARCHAR(50) NOT NULL,            -- 姓名
+                age SMALLINT CHECK (age > 0),         -- 年龄
+                gender VARCHAR(10) CHECK (gender IN ('男', '女', '未知')) -- 性别
+            );
+        )";
 
-       txn.exec(sql);
-       txn.commit();
-       std::cout << "课程表创建成功（或已存在）" << std::endl;
-   } catch (const std::exception& e) {
-       std::cerr << "创建课程表失败: " << e.what() << std::endl;
-       throw;
-   }
-}
+        // 2. 创建教师表
+        string create_teacher_sql = R"(
+            CREATE TABLE IF NOT EXISTS teachers (
+                id VARCHAR(50) NOT NULL PRIMARY KEY,  -- 教师ID（字符型，用户指定）
+                name VARCHAR(50) NOT NULL,            -- 姓名
+                age SMALLINT CHECK (age > 0),         -- 年龄
+                gender VARCHAR(10) CHECK (gender IN ('男', '女', '未知')) -- 性别
+            );
+        )";
 
-void operationToDB::createTeacherTable()
-{
-    try {
-            auto conn = getConnection();
-            pqxx::work txn(conn);
+        // 3. 创建课程表
+        string create_course_sql = R"(
+            CREATE TABLE IF NOT EXISTS courses (
+                id VARCHAR(50) NOT NULL PRIMARY KEY,  -- 课程ID（字符型，用户指定）
+                course_no VARCHAR(20) NOT NULL UNIQUE,-- 课程编号
+                course_name VARCHAR(100) NOT NULL,    -- 课程名
+                credit NUMERIC(3,1) CHECK (credit >= 0) -- 学分
+            );
+        )";
 
-            // 移除原course_id字段，改为通过course_teacher_relation表关联
-            string sql = R"(
-                CREATE TABLE IF NOT EXISTS teachers (
-                    id SERIAL PRIMARY KEY,
-                    name VARCHAR(50) NOT NULL,
-                    age SMALLINT CHECK (age > 0),
-                    gender VARCHAR(10) CHECK (gender IN ('男', '女', '未知'))
-                );
-            )";
+        // 执行建表语句
+        txn.exec(create_student_sql);
+        txn.exec(create_teacher_sql);
+        txn.exec(create_course_sql);
+        txn.commit();
 
-            txn.exec(sql);
-            txn.commit();
-            std::cout << "教师表创建成功（或已存在）" << std::endl;
-        } catch (const std::exception& e) {
-            std::cerr << "创建教师表失败: " << e.what() << std::endl;
-            throw;
-   }
-}
-
-void operationToDB::createCourseTable()
-{
-    try {
-            auto conn = getConnection();
-            pqxx::work txn(conn);
-
-            string sql = R"(
-                CREATE TABLE IF NOT EXISTS courses (
-                    id SERIAL PRIMARY KEY,
-                    course_name VARCHAR(100) NOT NULL UNIQUE,
-                    credit NUMERIC(3,1) CHECK (credit >= 0)
-                );
-            )";
-
-            txn.exec(sql);
-            txn.commit();
-            std::cout << "课程表创建成功（或已存在）" << std::endl;
-        } catch (const std::exception& e) {
-            std::cerr << "创建课程表失败: " << e.what() << std::endl;
-            throw;
-        }
+        cout << "[INFO] 所有表（学生、教师、课程）创建成功（或已存在）" << endl;
+    } catch (const std::exception& e) {
+        cerr << "[ERROR] 建表失败: " << e.what() << endl;
+        throw;
+    }
 }
