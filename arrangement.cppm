@@ -6,36 +6,42 @@
 export module arrangement;
 import std;
 import teacherbroker;
+import Class;
+import teacher;
 import system;
+
+using std::vector; using std::shared_ptr;
+using std::string;
 
 export class Arrangement
 {
 public:
     Arrangement(System& sys);//初始化函数
-    static Arrangement& singletonArrange();
-    void teacherArrangeCourse();
+    static Arrangement& singletonArrange(System& sys);
+    void teacherArrangeCourse(string tid,string cid);
 private:
     vector<shared_ptr<Class>> _courseList;
-    vector<share_ptr<Teacher>> _teacherList
+    vector<shared_ptr<Teacher>> _teacherList;
 };
 
 Arrangement::Arrangement(System& sys)
 {
-    _courseList = sys.getTeacherList();
+    _courseList = sys.getCourseList();
+    _teacherList = sys.getTeacherList();
 }
 
-Arrangement& Arrangement::singletonArrange()
+Arrangement& Arrangement::singletonArrange(System& sys)
 {
-    static Arrangement instance;
+    static Arrangement instance(sys);
     return instance;
 }
 
-void Arrangement::teacherArrangeCourse()
+void Arrangement::teacherArrangeCourse(string tid,string cid)
 {
     teacherBroker broker;
-    shared_ptr<Teacher> tea = broker.findTeacherById();
-    shared_ptr<Class> cla = boker.findCourseById();
+    shared_ptr<Teacher> tea = broker.findTeacherById(tid,_teacherList);
+    shared_ptr<Class> cla = broker.findCourseById(cid,_courseList);
 
-    tea.addCourse(cla);
-    cla.teacherAdd(tea);
+    tea->addCourse(cla);
+    cla->teacherAdd(tea);
 }

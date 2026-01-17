@@ -11,19 +11,20 @@ import std;
 import Class;
 
 using std::shared_ptr; using std::vector;
+using std::string;
 
 export class relationBroker
 {
 public:
     relationBroker();
-    shared_ptr<Class> findCourseById(cid,vector<shared_ptr<Class>> courseList);//studen
+    shared_ptr<Class> findCourseById(string cid,vector<shared_ptr<Class>> courseList);//studen
 private:
 };
 
 relationBroker::relationBroker()
 {}
 
-shared_ptr<Class> relationBroker::findCourseById(cid,vector<shared_ptr<Class>>courseList);
+shared_ptr<Class> relationBroker::findCourseById(string cid,vector<shared_ptr<Class>>courseList)
 {
     for(const auto& claPtr : courseList)
     {

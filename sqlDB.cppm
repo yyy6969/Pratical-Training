@@ -5,10 +5,20 @@
 //
 
 export module sqlDB;
+
+
 import std;
+import student;
+import teacher;
+import Class;
 #include <pqxx/pqxx>
 
+
 using std::string;
+using std::vector;
+using std::cout;
+using std::cerr;
+using std::to_string;
 
 export class operationToDB
 {
@@ -31,7 +41,7 @@ private:
     string m_password;
     const string m_host = "127.0.0.1";
     const int m_port = 5432;
-}
+};
 
 operationToDB::operationToDB(string name,string user,string password)
 :m_dbname(name),m_user(user),m_password(password)
@@ -125,7 +135,7 @@ void operationToDB::createAllTables()
     }
 }
 
-bool operationToDB::insertPerson(const string& table_name,const string& table_name,string id,string name,int age,string gender)
+bool operationToDB::insertPerson(const string& table_name,string id,string name,int age,string gender)
 {
     try {
             auto conn = getConnection();
@@ -184,7 +194,7 @@ bool operationToDB::insertCourse(string id, string course_no, string course_name
         }
 }
 
-bool insertUserCourseRelation(const string& user_id, const string& user_type, const string& course_id)
+bool operationToDB::insertUserCourseRelation(const string& user_id, const string& user_type, const string& course_id)
 {
 // 校验用户类型
     if (user_type != "student" && user_type != "teacher") {

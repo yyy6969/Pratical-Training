@@ -20,20 +20,20 @@ public:
     static System& singletonSystem();
     //void exec() 执行函数
 
-    vector<Student>& getStudentList();
-    const vector<Student>& getStudentListConst() const;// 获取学生列表,只读，防止误修改
-    vector<Teacher>& getTeacherList();
-    const vector<Teacher>& getTeacherListConst() const;//获得老师列表
-    vector<Class>& getCourseLis();
-    const vector<Class>& getCourseListConst();//获取课程列表，只读
+    vector<shared_ptr<Student>>& getStudentList();
+    const vector<shared_ptr<Student>>& getStudentListConst() const; // 只读学生列表
+    vector<shared_ptr<Teacher>>& getTeacherList();
+    const vector<shared_ptr<Teacher>>& getTeacherListConst() const; // 只读教师列表
+    vector<shared_ptr<Class>>& getCourseList();                     // 修复错误3：拼写 getCourseList
+    const vector<shared_ptr<Class>>& getCourseListConst() const;    // 只读课程列表
 
 
 
     void exec();//程序执行函数，所有操作放在这里面
 private:
-    vector<share_ptr<Student>> _studentList;
-    vector<share_ptr<Class>> _courseList;
-    vector<share_ptr<Teahcer>> _teacherList
+    vector<shared_ptr<Student>> _studentList;
+    vector<shared_ptr<Class>> _courseList;
+    vector<shared_ptr<Teacher>> _teacherList;
 };
 
 System::System()
@@ -45,31 +45,34 @@ System& System::singletonSystem()
     return instance;
 }
 
-vector<Student>& System::getStudentList()
+
+vector<shared_ptr<Student>>& System::getStudentList()
 {
-    return _studentList;//得到学生数组并进行操作
+    return _studentList;
 }
 
-const vector<Student>& getStudentListConst() const
+const vector<shared_ptr<Student>>& System::getStudentListConst() const
 {
-    return _studentList;//获得只读数组，用于ui模块
+    return _studentList;
 }
 
-vector<Teacher>& getTeacherList()
-{
-    return _teacherList;
-}
-const vector<Teacher>& getTeacherListConst() const
+vector<shared_ptr<Teacher>>& System::getTeacherList()
 {
     return _teacherList;
 }
 
-vector<Class>& System::getCourseLis()
+const vector<shared_ptr<Teacher>>& System::getTeacherListConst() const
+{
+    return _teacherList;
+}
+
+vector<shared_ptr<Class>>& System::getCourseList()
 {
     return _courseList;
 }
 
-const vector<Class>& System:getCourseListConst()
+const vector<shared_ptr<Class>>& System::getCourseListConst() const
 {
     return _courseList;
 }
+

@@ -9,6 +9,7 @@
 export module student;
 import std;
 import person;
+import Class;
 
 
 using std::string; using std::vector;
@@ -19,11 +20,11 @@ export class Student : public Person
 public:
     Student(string name,int age,string gender,string id);
     string getStudentId() const;
-    void addCourse(class Class cla);
-    vector<int> getSelectedCourseIds() const;//提取所选课程的ID数组（用于插入数据库）
+    void addCourse(shared_ptr<Class> cla);
+    //vector<int> getSelectedCourseIds() const;//提取所选课程的ID数组（用于插入数据库）
 private:
     string m_sid;
-    vector<std::shared_ptr<class Course>> m_selected_courses;//所选的课程
+    vector<std::shared_ptr<Class>> m_selected_courses;//所选的课程
 };
 
 Student::Student(string name,int age,string gender,string id)
@@ -36,16 +37,12 @@ string Student::getStudentId() const
     return m_sid;
 }
 
-void addCourse(shared_ptr<class Class> cla)
+void Student::addCourse(shared_ptr<Class> cla)
 {
+    if (!cla) {
+        print("【错误】学生{}（ID={}）：传入空课程对象，选课失败！\n",this->getName(), m_sid);
+        return;
+    }
     m_selected_courses.push_back(cla);
 }
 
-vector<int> Student::getSelectedCourseIds() const
-{
-    vector<int> course_ids;
-    for (const auto& course_ptr : m_selected_courses) {
-        course_ids.push_back(course_ptr->getStudentId()); // 从Course对象中提取ID
-    }
-    return course_ids;
-}

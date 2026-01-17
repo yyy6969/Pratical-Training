@@ -5,26 +5,29 @@
 //
 export module Class;
 import std;
-import student;
-import teacher;
+//import student;
+//import teacher;
 
 using std::string; using std::vector;
 using std::weak_ptr;
 
+class Student;
+class Teacher;
 
 export class Class
 {
 public:
     Class(string csName,string csId,double credit);
     string getid() const;//读取课程号
+    string getName();//读取课程名字
+    void studentAdd(weak_ptr<Student> stu);//添加学生
+    void teacherAdd(weak_ptr<Teacher> tec);//添加老师
 private:
     string m_courseName;
     string m_courseId;
     double m_credit;
     static int cm_totalCount;//静态数据，整个类共享，统计课的数量
 
-    void studentAdd(weak_ptr<Student> stu);//添加学生
-    void teacherAdd(weak_ptr<Teacher> tec);//添加老师
     vector<weak_ptr<Student>> _student;//用weak_ptr存储选课学生，不拥有所有权
     vector<weak_ptr<Teacher>> _teacher;
 };
@@ -42,11 +45,16 @@ string Class::getid() const
     return m_courseId;
 }
 
+string Class::getName()
+{
+    return m_courseName;
+}
+
 void Class::studentAdd(weak_ptr<Student> stu)
 {
-    _student.pushback(stu);
+    _student.push_back(stu);
 }
-void teacherAdd(weak_ptr<Teacher> tec)
+void Class::teacherAdd(weak_ptr<Teacher> tec)
 {
-    _teacher.pushback(tec);
+    _teacher.push_back(tec);
 }
