@@ -29,7 +29,6 @@ set(OPERATE_FILES
 
 set(UI_FILES
     #进行IO操作的模块
-    ui.cppm
 
 )
 

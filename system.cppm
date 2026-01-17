@@ -17,7 +17,46 @@ export class System
 {
 public:
     System();
-    static System& singleton();
+    static System& singletonSystem();
+    vector<Student>& getStudentList();
+    const vector<Student>& getStudentListConst() const;// 获取学生列表,只读，防止误修改
+    vector<Class>& getCourseLis();
+    const vector<Class>& getCourseListConst();//获取学生列表，只读
+
+
+
     void exec();//程序执行函数，所有操作放在这里面
 private:
+    vector<share_ptr<Student>> _studentList;
+    vector<share_ptr<Class>> _courseList;
+    vector<share_ptr<Teahcer>> _teacherList
 };
+
+System::System()
+{}
+
+System& System::singletonSystem()
+{
+    static System instance;
+    return instance;
+}
+
+vector<Student>& System::getStudentList()
+{
+    return _studentList;//得到学生数组并进行操作
+}
+
+const vector<Student>& getStudentListConst() const
+{
+    return _studentList;//获得只读数组，用于ui模块
+}
+
+vector<Class>& System::getCourseLis()
+{
+    return _courseList;
+}
+
+const vector<Class>& System:getCourseListConst()
+{
+    return _courseList;
+}

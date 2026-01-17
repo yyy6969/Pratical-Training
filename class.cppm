@@ -22,8 +22,11 @@ private:
     string m_courseId;
     double m_credit;
     static int cm_totalCount;//静态数据，整个类共享，统计课的数量
-    vector<weak_ptr<class Student>> _student;//用weak_ptr存储选课学生，不拥有所有权
-    vector<weak_ptr<class Teacher>> _teacher;
+
+    void studentAdd(weak_ptr<Student> stu);//添加学生
+    void teacherAdd(weak_ptr<Teacher> tec);//添加老师
+    vector<weak_ptr<Student>> _student;//用weak_ptr存储选课学生，不拥有所有权
+    vector<weak_ptr<Teacher>> _teacher;
 };
 
 int Class::cm_totalCount = 0;//课程数目初始化为零
@@ -37,4 +40,13 @@ Class::Class(string csName,string csId,double credit)
 string Class::getid() const
 {
     return m_courseId;
+}
+
+void Class::studentAdd(weak_ptr<Student> stu)
+{
+    _student.pushback(stu);
+}
+void teacherAdd(weak_ptr<Teacher> tec)
+{
+    _teacher.pushback(tec);
 }

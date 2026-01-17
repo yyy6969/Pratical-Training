@@ -8,17 +8,40 @@ import std;
 import Class;
 import student;
 import studentbroker;
+import system;
 
 using std::string; using std::vector;
+using std::shared_ptr
 
 export class Enrollment
 {
 public:
-    Enrollment(string c_id,string s_id);//全部用id来实现查找
+    Enrollment(System& sys);//全部用id来实现查找
+    static Enrollment& singletonEnroll();
+    void studentEnrollCourse(string sid,string cid);//完成学生添加课程
 private:
-    string m_cid;//课程id
-    string m_sid;//学生id
-    vector<share_ptr<Student>> _studentlist;
-    vector<share_ptr<Class>> _courselist;
+    vector<shared_ptr<Student>> _studentList;
+    vector<shared_ptr<Class>> _courseList;
 };
 
+Enrollment::Enrollment(System& sys)
+{
+    _studentList = sys.getStudentList();
+    _courseList = sys.getCourseList();
+}
+
+Enrollment& Enrollment::singletonEnroll()
+{
+    static Enrollment instance;
+    return instance;
+}
+
+void Enrollment::studentEnrollCourse(string sid,string cid)
+{
+    studentBroker broker;
+    shared_ptr<Student> stu = broker.findStudentById(sid,_studentList);
+    shared_ptr<Class> cla = broker.findCourseById(cid,_courseList);
+
+    stu->addCourse(cla);
+    cla->addStudent(stu);
+}

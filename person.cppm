@@ -5,7 +5,6 @@
 //
 export module person;
 import std;
-
 using std::string;
 
 export class Person

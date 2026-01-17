@@ -6,6 +6,8 @@
 export module student;
 import std;
 import person;
+import Class;
+
 
 using std::string; using std::vector;
 using std::shared_ptr;
@@ -15,6 +17,7 @@ export class Student : public Person
 public:
     Student(string name,int age,string gender,string id);
     string getStudentId() const;
+    void addCourse(Class cla);
 private:
     string m_sid;
     vector<std::shared_ptr<class Course>> m_selected_courses;//所选的课程
@@ -28,4 +31,9 @@ Student::Student(string name,int age,string gender,string id)
 string Student::getStudentId() const
 {
     return m_sid;
+}
+
+void addCourse(shared_ptr<Class> cla)
+{
+    m_selected_courses.pushback(cla);
 }

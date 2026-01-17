@@ -28,8 +28,8 @@ shared_ptr<Student> studentBroker::findStudentById(string sid,vector<shared_ptr<
            }
 
            // 对比学生ID
-           if (stuPtr->getStudentId() == studentId) {
-               std::print("成功找到学生：ID={}\n", studentId);
+           if (stuPtr->getStudentId() == sid) {
+               std::print("成功找到学生：ID={}\n", sid);
                return stuPtr;
            }
     }
