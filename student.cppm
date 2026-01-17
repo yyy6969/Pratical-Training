@@ -38,14 +38,14 @@ string Student::getStudentId() const
 
 void addCourse(shared_ptr<class Class> cla)
 {
-    m_selected_courses.pushback(cla);
+    m_selected_courses.push_back(cla);
 }
 
 vector<int> Student::getSelectedCourseIds() const
 {
     vector<int> course_ids;
     for (const auto& course_ptr : m_selected_courses) {
-        course_ids.push_back(course_ptr->getId()); // 从Course对象中提取ID
+        course_ids.push_back(course_ptr->getStudentId()); // 从Course对象中提取ID
     }
     return course_ids;
 }

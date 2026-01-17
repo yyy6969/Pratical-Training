@@ -43,7 +43,7 @@ string Teacher::getTeacherId() const
 void Teacher::addCourse(shared_ptr<class Class> course)
 {
     if (m_teach_course != nullptr) {
-            std::print("老师{}已分配课程【{}】，无法重复分配！\n", getName(), m_teach_course->getName());
+            std::print("老师{}已分配课程【{}】，无法重复分配！\n",this->getName(), m_teach_course->getName());
             return;
         }
         // 正确拼写：push_back → 但这里直接赋值（因为只存1门课，无需vector）

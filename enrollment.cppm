@@ -30,9 +30,9 @@ Enrollment::Enrollment(System& sys)
     _courseList = sys.getCourseList();
 }
 
-Enrollment& Enrollment::singletonEnroll()
+Enrollment& Enrollment::singletonEnroll(System& sys)
 {
-    static Enrollment instance;
+    static Enrollment instance(Sys);
     return instance;
 }
 
