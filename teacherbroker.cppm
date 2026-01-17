@@ -4,13 +4,15 @@
 // Description:老师类的查找模块，单独实现为一个类
 //
 export module teacherbroker;
-import std:
+import std;
 import relationbroker;
+import teacher;
 
 using std::vector; using std::string;
 using std::shared_ptr; using std::weak_ptr;
+using std::print;
 
-export class teacherBroker:public relationbroker
+export class teacherBroker:public relationBroker
 {
 public:
     teacherBroker();
@@ -29,8 +31,9 @@ shared_ptr<Teacher> teacherBroker::findTeacherById(string tid,vector<shared_ptr<
 
         if(teaPtr->getTeacherId() == tid)
         {
-            std::print("成功找到老师：ID={}\n",tid)
+            print("成功找到老师：ID={}\n",tid);
             return teaPtr;
         }
     }
+    return nullptr;
 }

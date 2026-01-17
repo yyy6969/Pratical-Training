@@ -11,13 +11,13 @@ import studentbroker;
 import system;
 
 using std::string; using std::vector;
-using std::shared_ptr
+using std::shared_ptr;
 
 export class Enrollment
 {
 public:
     Enrollment(System& sys);//初始化函数
-    static Enrollment& singletonEnroll();
+    static Enrollment& singletonEnroll(System& sys);
     void studentEnrollCourse(string sid,string cid);//完成学生添加课程
 private:
     vector<shared_ptr<Student>> _studentList;
@@ -30,9 +30,9 @@ Enrollment::Enrollment(System& sys)
     _courseList = sys.getCourseList();
 }
 
-Enrollment& Enrollment::singletonEnroll()
+Enrollment& Enrollment::singletonEnroll(System& sys)
 {
-    static Enrollment instance;
+    static Enrollment instance(sys);
     return instance;
 }
 

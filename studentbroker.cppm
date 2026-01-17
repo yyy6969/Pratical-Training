@@ -6,10 +6,12 @@
 export module studentbroker;
 import std;
 import relationbroker;
+import student;
+
 using std::vector; using std::string;
 using std::shared_ptr; using std::weak_ptr;
 
-export class studentBroker:public relationbroker
+export class studentBroker:public relationBroker
 {
 public:
     studentBroker();
@@ -20,7 +22,7 @@ private:
 
 shared_ptr<Student> studentBroker::findStudentById(string sid,vector<shared_ptr<Student>> studentlist)
 {
-    for (const auto& stuPtr : studentList)
+    for (const auto& stuPtr : studentlist)
     {
            // 空指针检查：避免访问空的Student对象
            if (!stuPtr) {
