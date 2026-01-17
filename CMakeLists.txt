@@ -13,6 +13,7 @@ add_executable(gradeSystem
     main.cpp
     sqlDB.cppm
 
+
 )
 
 set(MODULE_INTERFACE_FILES
@@ -31,6 +32,7 @@ set(OPERATE_FILES
 
 set(UI_FILES
     #进行IO操作的模块
+    ui.cppm
 
 )
 
