@@ -3,10 +3,10 @@
 // Created: YuHaoRan      2026-01-16 18:22:05
 // Description:学生查找类，继承查找基类，对学生的id号进行查找判断该学生是否存在
 //
-export module studentbroker;
+export module gradesystem:studentbroker;
 import std;
-import relationbroker;
-import student;
+import :relationbroker;
+import :student;
 
 using std::vector; using std::string;
 using std::shared_ptr; using std::weak_ptr;
@@ -14,7 +14,7 @@ using std::shared_ptr; using std::weak_ptr;
 export class studentBroker:public relationBroker
 {
 public:
-    studentBroker();
+    studentBroker() = default;
     shared_ptr<Student> findStudentById(string sid,vector<shared_ptr<Student>> studentlist);
 private:
 

@@ -3,14 +3,8 @@
 // Created: YuHaoRan      2026-01-16 14:58:16
 // Description:课程类，核心属性：课程名、课程id、学分，支持添加学生/老师
 //
-export module course;
+export module gradesystem:course;
 import std;
-
-// 前置声明，避免循环依赖
-class Student;
-class Teacher;
-import student;  // 导入student模块，统一Student类型
-import teacher;
 
 using std::string;
 using std::vector;
@@ -24,8 +18,8 @@ public:
 
     string getid() const;          // 读取课程号
     string getName() const;             // 读取课程名字
-    void studentAdd(weak_ptr<Student> stu);  // 添加学生
-    void teacherAdd(weak_ptr<Teacher> tec);  // 添加老师
+    void studentAdd(weak_ptr<class Student> stu);  // 添加学生
+    void teacherAdd(weak_ptr<class Teacher> tec);  // 添加老师
 
 private:
     string m_courseName;           // 课程名称
@@ -33,8 +27,8 @@ private:
     double m_credit;               // 学分（保留但无对外接口）
 
     // 存储学生/老师的容器（仅用于添加功能）
-    vector<weak_ptr<Student>> _student;
-    vector<weak_ptr<Teacher>> _teacher;
+    vector<weak_ptr<class Student>> _student;
+    vector<weak_ptr<class Teacher>> _teacher;
 };
 
 // 构造函数实现
@@ -54,10 +48,10 @@ string Course::getName() const
     return m_courseName;
 }
 
-void Course::studentAdd(weak_ptr<Student> stu) {
+void Course::studentAdd(weak_ptr<class Student> stu) {
     _student.push_back(stu);
 }
 
-void Course::teacherAdd(weak_ptr<Teacher> tec) {
+void Course::teacherAdd(weak_ptr<class Teacher> tec) {
     _teacher.push_back(tec);
 }

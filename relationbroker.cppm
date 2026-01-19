@@ -6,9 +6,9 @@
 // Change Log:
 //     [v0.1.1]  YuHaoRan   2026-01-17 14:19:10
 //         * 添加了findCourseById这个两个broker都能使用的函数，放在他们的基类。
-export module relationbroker;
+export module gradesystem:relationbroker;
 import std;
-import course;
+import :course;
 
 using std::shared_ptr; using std::vector;
 using std::string;

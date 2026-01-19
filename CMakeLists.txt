@@ -54,6 +54,7 @@ set(DOMAIN_FILES
 set(CONTROL_FILES
     #控制器模块，用于放置System最高层次管理函数
     system.cppm
+    gradeSystem.cppm
 )
 
 source_group("Module Interfaces" FILES ${MODULE_INTERFACE_FILES})

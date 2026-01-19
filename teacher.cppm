@@ -6,10 +6,10 @@
 // Change Log:
 //     [v0.1.1]  YuHaoRan   2026-01-17 18:11:04
 //         * 添加了检验教师是否多选了所教课程函数，并且修改指针为一个class类的指针
-export module teacher;
+export module gradesystem:teacher;
 import std;
-import person;
-import course;
+import :person;
+
 
 
 using std::string; using std::shared_ptr;
@@ -30,6 +30,7 @@ private:
     shared_ptr<class Course> m_teach_course;// 核心：只存1门课（替代vector，贴合“只能教1门”的需求）
 };
 
+
 Teacher::Teacher(string name,int age,string gender,string id)
 :Person(name,age,gender),m_tid(id),m_teach_course(nullptr)
 {
@@ -47,12 +48,4 @@ bool Teacher::hasCourse() const
     return m_teach_course != nullptr;
 }
 
-void Teacher::teacherAddCourse(shared_ptr<Course> course)
-{
-    if (hasCourse()) {
-        std::print("老师{}已分配课程{}，无法重复分配！\n", m_tid, m_teach_course->getName());
-        return;
-    }
-    m_teach_course = course;
-    std::print("老师{}成功分配课程{}\n", m_tid, course->getName());
-}
+
