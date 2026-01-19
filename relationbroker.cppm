@@ -8,7 +8,7 @@
 //         * 添加了findCourseById这个两个broker都能使用的函数，放在他们的基类。
 export module relationbroker;
 import std;
-import Class;
+import course;
 
 using std::shared_ptr; using std::vector;
 using std::string;
@@ -17,14 +17,14 @@ export class relationBroker
 {
 public:
     relationBroker();
-    shared_ptr<Class> findCourseById(string cid,vector<shared_ptr<Class>> courseList);//studen
+    shared_ptr<Course> findCourseById(string cid,vector<shared_ptr<Course>> courseList);//studen
 private:
 };
 
 relationBroker::relationBroker()
 {}
 
-shared_ptr<Class> relationBroker::findCourseById(string cid,vector<shared_ptr<Class>>courseList)
+shared_ptr<Course> relationBroker::findCourseById(string cid,vector<shared_ptr<Course>>courseList)
 {
     for(const auto& claPtr : courseList)
     {
@@ -38,4 +38,5 @@ shared_ptr<Class> relationBroker::findCourseById(string cid,vector<shared_ptr<Cl
             return claPtr;
         }
     }
+    return nullptr;
 }

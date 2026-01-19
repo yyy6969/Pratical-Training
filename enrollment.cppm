@@ -5,34 +5,31 @@
 //
 export module enrollment;
 import std;
-import Class;
+import course;
 import student;
 import studentbroker;
-import system;
 
 using std::string; using std::vector;
-using std::shared_ptr;
+using std::shared_ptr;using std::weak_ptr;
 
 export class Enrollment
 {
 public:
-    Enrollment(System& sys);//初始化函数
-    static Enrollment& singletonEnroll(System& sys);
+    Enrollment();//初始化函数
+    static Enrollment& singletonEnroll();
     void studentEnrollCourse(string sid,string cid);//完成学生添加课程
 private:
     vector<shared_ptr<Student>> _studentList;
-    vector<shared_ptr<Class>> _courseList;
+    vector<shared_ptr<Course>> _courseList;
 };
 
-Enrollment::Enrollment(System& sys)
+Enrollment::Enrollment()
 {
-    _studentList = sys.getStudentList();
-    _courseList = sys.getCourseList();
 }
 
-Enrollment& Enrollment::singletonEnroll(System& sys)
+Enrollment& Enrollment::singletonEnroll()
 {
-    static Enrollment instance(sys);
+    static Enrollment instance;
     return instance;
 }
 
@@ -40,8 +37,8 @@ void Enrollment::studentEnrollCourse(string sid,string cid)
 {
     studentBroker broker;
     shared_ptr<Student> stu = broker.findStudentById(sid,_studentList);
-    shared_ptr<Class> cla = broker.findCourseById(cid,_courseList);
+    shared_ptr<Course> cla = broker.findCourseById(cid,_courseList);
 
-    stu->addCourse(cla);
-    cla->addStudent(stu);
+    stu->studentAddCourse(cla);
+    cla->studentAdd(weak_ptr<Student>(stu));
 }

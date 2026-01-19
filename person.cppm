@@ -28,15 +28,6 @@ Person::Person(string name,int age,string gender):m_name(name),m_age(age),m_gend
 
 Person::~Person(){}
 
-string Person::getName () const
-{
-    return m_name;
-}
-int Person::getAge () const
-{
-    return m_age;
-}
-string Person::getGender () const
-{
-    return m_gender;
-}
+string Person::getName() const { return m_name; }
+int Person::getAge() const { return m_age; }
+string Person::getGender() const { return m_gender; }

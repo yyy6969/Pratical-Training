@@ -35,4 +35,5 @@ shared_ptr<Student> studentBroker::findStudentById(string sid,vector<shared_ptr<
                return stuPtr;
            }
     }
+    return nullptr;
 }

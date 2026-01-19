@@ -8,8 +8,8 @@
 //         * 添加了获得所选课程的id号的函数
 export module student;
 import std;
+import course;
 import person;
-import Class;
 
 
 using std::string; using std::vector;
@@ -20,24 +20,24 @@ export class Student : public Person
 public:
     Student(string name,int age,string gender,string id);
     string getStudentId() const;
-    void addCourse(shared_ptr<Class> cla);
-    //vector<int> getSelectedCourseIds() const;//提取所选课程的ID数组（用于插入数据库）
+    void studentAddCourse(shared_ptr<Course> cla);
 private:
     string m_sid;
-    vector<std::shared_ptr<Class>> m_selected_courses;//所选的课程
+    vector<std::shared_ptr<Course>> m_selected_courses;//所选的课程
 };
 
 Student::Student(string name,int age,string gender,string id)
 :Person(name,age,gender),m_sid(id)
 {
-    std::print("创建学生用户\n");
+    std::print("创建学生用户{}\n",name);
 }
+
 string Student::getStudentId() const
 {
     return m_sid;
 }
 
-void Student::addCourse(shared_ptr<Class> cla)
+void Student::studentAddCourse(shared_ptr<Course> cla)//学生添加课程
 {
     if (!cla) {
         print("【错误】学生{}（ID={}）：传入空课程对象，选课失败！\n",this->getName(), m_sid);
@@ -45,4 +45,5 @@ void Student::addCourse(shared_ptr<Class> cla)
     }
     m_selected_courses.push_back(cla);
 }
+
 

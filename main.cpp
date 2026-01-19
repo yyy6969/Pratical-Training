@@ -1,5 +1,4 @@
 import std;
-import system;
 
 int main()
 {

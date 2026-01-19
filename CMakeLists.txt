@@ -11,6 +11,8 @@ project(gradeSystem LANGUAGES CXX)
 add_executable(gradeSystem
     #math.cpp                              # 模块实现单元
     main.cpp
+    sqlDB.h
+    sqlDB.cpp
 
 )
 
@@ -29,8 +31,7 @@ set(OPERATE_FILES
 )
 
 set(sqlDB_FILES
-    #进行IO操作的模块
-    sqlDB.cppm
+    #进行IO操作的模块    
 )
 
 set(UI_FILES
@@ -38,17 +39,19 @@ set(UI_FILES
 
 )
 
-set(CONTROL_FILES
-    #控制器模块，用于放置System最高层次管理函数
-    system.cppm
-)
 
 set(DOMAIN_FILES
     #放各种基类
     person.cppm
     student.cppm
     teacher.cppm
-    class.cppm
+    course.cppm
+
+)
+
+set(CONTROL_FILES
+    #控制器模块，用于放置System最高层次管理函数
+    system.cppm
 )
 
 source_group("Module Interfaces" FILES ${MODULE_INTERFACE_FILES})
@@ -61,11 +64,14 @@ target_sources(gradeSystem  PRIVATE FILE_SET cxx_modules TYPE CXX_MODULES
     BASE_DIRS                              # 配置BASE_DIRS，用于组织构建输出目录，以便构建不同目录中(同名的)模块文件.
         #${MODULE_LIB_DIR1}
         ${CMAKE_CURRENT_SOURCE_DIR}
-    FILES ${MODULE_INTERFACE_FILES} ${UI_FILES} ${CONTROL_FILES} ${DOMAIN_FILES} ${OPERATE_FILES} ${sqlDB_FILES}
+    FILES ${MODULE_INTERFACE_FILES} ${UI_FILES}  ${DOMAIN_FILES} ${OPERATE_FILES} ${sqlDB_FILES} ${CONTROL_FILES}
 )
 target_compile_features(gradeSystem PRIVATE cxx_std_23)
 
-
+# 链接 pqxx 库（关键：原配置缺失数据库库链接）
+target_include_directories(gradeSystem PRIVATE ${PQXX_INCLUDE_DIRS})
+target_link_directories(gradeSystem PRIVATE ${PQXX_LIBRARY_DIRS})
+target_link_libraries(gradeSystem PRIVATE ${PQXX_LIBRARIES})
 
 
 

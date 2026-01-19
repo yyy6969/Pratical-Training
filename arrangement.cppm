@@ -6,33 +6,30 @@
 export module arrangement;
 import std;
 import teacherbroker;
-import Class;
+import course;
 import teacher;
-import system;
 
 using std::vector; using std::shared_ptr;
-using std::string;
+using std::string; using std::weak_ptr;
 
 export class Arrangement
 {
 public:
-    Arrangement(System& sys);//初始化函数
-    static Arrangement& singletonArrange(System& sys);
+    Arrangement();//初始化函数
+    static Arrangement& singletonArrange();
     void teacherArrangeCourse(string tid,string cid);
 private:
-    vector<shared_ptr<Class>> _courseList;
+    vector<shared_ptr<Course>> _courseList;
     vector<shared_ptr<Teacher>> _teacherList;
 };
 
-Arrangement::Arrangement(System& sys)
+Arrangement::Arrangement()
 {
-    _courseList = sys.getCourseList();
-    _teacherList = sys.getTeacherList();
 }
 
-Arrangement& Arrangement::singletonArrange(System& sys)
+Arrangement& Arrangement::singletonArrange()
 {
-    static Arrangement instance(sys);
+    static Arrangement instance;
     return instance;
 }
 
@@ -40,8 +37,13 @@ void Arrangement::teacherArrangeCourse(string tid,string cid)
 {
     teacherBroker broker;
     shared_ptr<Teacher> tea = broker.findTeacherById(tid,_teacherList);
-    shared_ptr<Class> cla = broker.findCourseById(cid,_courseList);
-
-    tea->addCourse(cla);
-    cla->teacherAdd(tea);
+    shared_ptr<Course> cla = broker.findCourseById(cid,_courseList);
+    if (!tea) {
+                std::print("教师ID= {} 不存在！",tid);
+            }
+            if (!cla) {
+                std::print("课程ID= {} 不存在！",cid);
+            }
+    tea->teacherAddCourse(cla);
+    cla->teacherAdd(weak_ptr<Teacher>(tea));
 }

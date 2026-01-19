@@ -9,7 +9,7 @@
 export module teacher;
 import std;
 import person;
-import Class;
+import course;
 
 
 using std::string; using std::shared_ptr;
@@ -20,14 +20,14 @@ export class Teacher:public Person
 public:
     Teacher(string name,int age,string gender,string id);
     string getTeacherId() const;
-    void addCourse(shared_ptr<Class> course);
+    void teacherAddCourse(shared_ptr<class Course> course);
 
     bool hasCourse() const;//新增：判断是否已分配课程（避免重复分配）
 
     ~Teacher() = default;
 private:
     string m_tid;//老师id
-    shared_ptr<Class> m_teach_course;// 核心：只存1门课（替代vector，贴合“只能教1门”的需求）
+    shared_ptr<class Course> m_teach_course;// 核心：只存1门课（替代vector，贴合“只能教1门”的需求）
 };
 
 Teacher::Teacher(string name,int age,string gender,string id)
@@ -41,12 +41,18 @@ string Teacher::getTeacherId() const
     return m_tid;
 }
 
-void Teacher::addCourse(shared_ptr<Class> course)
-{
-        m_teach_course = course;
-}
 
 bool Teacher::hasCourse() const
 {
     return m_teach_course != nullptr;
+}
+
+void Teacher::teacherAddCourse(shared_ptr<Course> course)
+{
+    if (hasCourse()) {
+        std::print("老师{}已分配课程{}，无法重复分配！\n", m_tid, m_teach_course->getName());
+        return;
+    }
+    m_teach_course = course;
+    std::print("老师{}成功分配课程{}\n", m_tid, course->getName());
 }
