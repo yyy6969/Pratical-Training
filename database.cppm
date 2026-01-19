@@ -39,7 +39,6 @@ private:
     const int m_port = 5432;
 };
 
-// 类成员函数实现（模块内定义，无需重复export）
 operationToDB::operationToDB(const std::string& name, const std::string& user, const std::string& password)
     : m_dbname(name), m_user(user), m_password(password)
 {

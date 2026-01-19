@@ -24,8 +24,6 @@ public:
     vector<shared_ptr<Teacher>>& getTeacherList();//获得老师
     vector<shared_ptr<Student>>& getStudentList();//获得学生
     vector<shared_ptr<Course>>& getCourseList();//获得课程
-
-    void exec();//程序执行函数，所有操作放在这里面
 private:
     vector<shared_ptr<Teacher>> _allTeachers;
     vector<shared_ptr<Student>> _allStudents;
