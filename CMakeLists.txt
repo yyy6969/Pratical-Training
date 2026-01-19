@@ -16,10 +16,6 @@ pkg_check_modules(PQXX REQUIRED IMPORTED_TARGET libpqxx)
 add_executable(gradeSystem
     #math.cpp                              # 模块实现单元
     main.cpp
-    sqlDB.h
-    sqlDB.cpp
-
-
 )
 
 set(MODULE_INTERFACE_FILES
@@ -38,6 +34,7 @@ set(OPERATE_FILES
 
 set(sqlDB_FILES
     #进行IO操作的模块    
+    database.cppm
 )
 
 set(UI_FILES

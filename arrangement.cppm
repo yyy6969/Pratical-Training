@@ -10,7 +10,6 @@ import :course;
 import :teacher;
 import :system;
 
-
 using std::vector; using std::shared_ptr;
 using std::string; using std::weak_ptr;
 
