@@ -1,14 +1,14 @@
 // Module   ui
 // File: ui.cppm   Version: 0.3.0   License: AGPLv3
 // Created: YuHaoRan      2026-01-19 19:00:00
-// Description:极简版控制台UI类，保留核心功能，去掉冗余交互
+// Description:控制台UI类，保留核心功能，去掉冗余交互
 //
 export module gradesystem:ui;
 import std;
-import :system;          // 导入系统核心模块
-import :arrangement;     // 导入教师排课模块
-import :enrollment;      // 导入学生选课模块
-import database;         // 导入数据库模块
+import :system;
+import :arrangement;
+import :enrollment;
+import database;
 
 export class UI
 {
@@ -18,14 +18,12 @@ public:
 
     // 核心功能
     void initSystem(const std::string& db_name, const std::string& db_user, const std::string& db_pwd); // 系统初始化（含基础数据）
-    void showMainMenu();                          // 极简主菜单
+    void showMainMenu();
     void run();                                   // 启动UI循环
 
 private:
-    // 私有构造/析构：禁止外部实例化
     UI() = default;
     ~UI() = default;
-    // 禁用拷贝/移动
     UI(const UI&) = delete;
     UI& operator=(const UI&) = delete;
     UI(UI&&) = delete;
@@ -40,7 +38,7 @@ private:
     void printAllData();                          // 打印所有数据
     void initTestData();                          // 初始化基础测试数据
 
-    // 极简工具函数（去掉清屏/暂停）
+    // 工具函数
     std::string getInput(const std::string& prompt); // 获取用户输入
     int getIntInput(const std::string& prompt);      // 获取整数输入（带校验）
     double getDoubleInput(const std::string& prompt); // 获取浮点数输入（带校验）
@@ -99,26 +97,30 @@ void UI::initTestData()
     auto& studentList = system.getStudentList();
     auto& courseList = system.getCourseList();
 
-    // 预置教师
-    db_op.insertPerson("teachers", "T001", "张三", 35, "男");
-    db_op.insertPerson("teachers", "T002", "李四", 42, "女");
-    teacherList.emplace_back(std::make_shared<Teacher>("张三", 35, "男", "T001"));
-    teacherList.emplace_back(std::make_shared<Teacher>("李四", 42, "女", "T002"));
+    teacherList.clear();
+    studentList.clear();
+    courseList.clear();
 
-    // 预置学生
-    db_op.insertPerson("students", "S001", "小明", 18, "男");
-    db_op.insertPerson("students", "S002", "小红", 19, "女");
-    studentList.emplace_back(std::make_shared<Student>("小明", 18, "男", "S001"));
-    studentList.emplace_back(std::make_shared<Student>("小红", 19, "女", "S002"));
+    // 预置教师（英文性别）
+    db_op.insertPerson("teachers", "T001", "Zhang San", 35, "man");
+    db_op.insertPerson("teachers", "T002", "Li Si", 42, "woman");
+    teacherList.emplace_back(std::make_shared<Teacher>("Zhang San", 35, "man", "T001"));
+    teacherList.emplace_back(std::make_shared<Teacher>("Li Si", 42, "woman", "T002"));
 
-    // 预置课程
-    db_op.insertCourse("C001", "CS001", "C++程序设计", 3.0);
-    db_op.insertCourse("C002", "MA001", "高等数学", 4.0);
-    courseList.emplace_back(std::make_shared<Course>("C++程序设计", "C001", 3.0));
-    courseList.emplace_back(std::make_shared<Course>("高等数学", "C002", 4.0));
+    // 预置学生（英文性别）
+    db_op.insertPerson("students", "S001", "Xiao Ming", 18, "man");
+    db_op.insertPerson("students", "S002", "Xiao Hong", 19, "woman");
+    studentList.emplace_back(std::make_shared<Student>("Xiao Ming", 18, "man", "S001"));
+    studentList.emplace_back(std::make_shared<Student>("Xiao Hong", 19, "woman", "S002"));
+
+    // 预置课程（无变化）
+    db_op.insertCourse("C001", "CS001", "C++ Programming", 3.0);
+    db_op.insertCourse("C002", "MA001", "Advanced Math", 4.0);
+    courseList.emplace_back(std::make_shared<Course>("C++ Programming", "C001", 3.0));
+    courseList.emplace_back(std::make_shared<Course>("Advanced Math", "C002", 4.0));
 }
 
-// 极简主菜单（无清屏、无复杂格式）
+// 主菜单
 void UI::showMainMenu()
 {
     std::cout << "===== 成绩管理系统 =====\n";
@@ -154,22 +156,23 @@ void UI::run()
     }
 }
 
-// 添加教师（极简版）
+// 添加教师
 void UI::addTeacher()
 {
     std::cout << "\n===== 添加教师 =====\n";
     std::string tid = getInput("教师ID：");
     std::string name = getInput("姓名：");
     int age = getIntInput("年龄：");
-    std::string gender = getInput("性别：");
+    std::string gender = getInput("性别（man/woman/unknown）："); // 提示英文输入
 
     try {
         operationToDB db_op(m_db_name, m_db_user, m_db_pwd);
         bool res = db_op.insertPerson("teachers", tid, name, age, gender);
         if (res) {
+            // 数据库插入成功 → 同步添加到System的教师列表
             auto& system = System::singletonSystem();
             system.getTeacherList().emplace_back(std::make_shared<Teacher>(name, age, gender, tid));
-            std::cout << "教师添加成功！\n\n";
+            std::cout << "教师添加成功（数据库+内存）！\n\n";
         } else {
             std::cout << "教师ID已存在！\n\n";
         }
@@ -178,22 +181,23 @@ void UI::addTeacher()
     }
 }
 
-// 添加学生（极简版）
+// 添加学生
 void UI::addStudent()
 {
     std::cout << "\n===== 添加学生 =====\n";
     std::string sid = getInput("学生ID：");
     std::string name = getInput("姓名：");
     int age = getIntInput("年龄：");
-    std::string gender = getInput("性别：");
+    std::string gender = getInput("性别（man/woman/unknown）："); // 提示英文输入
 
     try {
         operationToDB db_op(m_db_name, m_db_user, m_db_pwd);
         bool res = db_op.insertPerson("students", sid, name, age, gender);
         if (res) {
+            // 数据库插入成功 → 同步添加到System的学生列表
             auto& system = System::singletonSystem();
             system.getStudentList().emplace_back(std::make_shared<Student>(name, age, gender, sid));
-            std::cout << "学生添加成功！\n\n";
+            std::cout << "学生添加成功（数据库+内存）！\n\n";
         } else {
             std::cout << "学生ID已存在！\n\n";
         }
@@ -202,7 +206,7 @@ void UI::addStudent()
     }
 }
 
-// 添加课程（极简版）
+// 添加课程
 void UI::addCourse()
 {
     std::cout << "\n===== 添加课程 =====\n";
@@ -215,9 +219,10 @@ void UI::addCourse()
         operationToDB db_op(m_db_name, m_db_user, m_db_pwd);
         bool res = db_op.insertCourse(cid, course_no, course_name, credit);
         if (res) {
+            // 数据库插入成功 → 同步添加到System的课程列表
             auto& system = System::singletonSystem();
             system.getCourseList().emplace_back(std::make_shared<Course>(course_name, cid, credit));
-            std::cout << "课程添加成功！\n\n";
+            std::cout << "课程添加成功（数据库+内存）！\n\n";
         } else {
             std::cout << "课程ID已存在！\n\n";
         }
@@ -226,7 +231,7 @@ void UI::addCourse()
     }
 }
 
-// 教师排课（极简版）
+// 教师排课
 void UI::teacherArrangeCourse()
 {
     std::cout << "\n===== 教师排课 =====\n";
@@ -241,7 +246,7 @@ void UI::teacherArrangeCourse()
     }
 }
 
-// 学生选课（极简版）
+// 学生选课
 void UI::studentEnrollCourse()
 {
     std::cout << "\n===== 学生选课 =====\n";
@@ -256,7 +261,7 @@ void UI::studentEnrollCourse()
     }
 }
 
-// 打印所有数据（极简版）
+// 打印所有数据
 void UI::printAllData()
 {
     std::cout << "\n===== 所有数据 =====\n";
@@ -294,7 +299,7 @@ std::string UI::getInput(const std::string& prompt)
     return input;
 }
 
-// 工具函数：获取整数输入（带校验）
+// 工具函数：获取整数输入
 int UI::getIntInput(const std::string& prompt)
 {
     int num = 0;
@@ -310,7 +315,7 @@ int UI::getIntInput(const std::string& prompt)
     return num;
 }
 
-// 工具函数：获取浮点数输入（带校验）
+// 工具函数：获取浮点数输入
 double UI::getDoubleInput(const std::string& prompt)
 {
     double num = 0.0;

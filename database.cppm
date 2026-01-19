@@ -4,7 +4,6 @@
 // Description:数据库模块（C++20模块版）
 //
 
-// 模块前置编译指令（module prelude
 module;
 #include <pqxx/pqxx>
 
@@ -29,7 +28,7 @@ public:
 
 private:
     // 私有函数声明
-    pqxx::connection getConnection(); // 连接数据库函数
+    std::shared_ptr<pqxx::connection> getConnection(); // 连接数据库函数
 
     // 成员变量声明
     std::string m_dbname;
@@ -44,9 +43,9 @@ operationToDB::operationToDB(const std::string& name, const std::string& user, c
 {
     try {
         auto conn = getConnection();
-        if (conn.is_open()) {
+        if (conn->is_open()) {
             std::cout << "[INFO] 数据库连接成功: " << m_dbname << "\n";
-            conn.close();
+            conn->close();
         }
     } catch (const std::exception& e) {
         std::cerr << "[ERROR] 数据库连接失败: " << e.what() << "\n";
@@ -55,7 +54,7 @@ operationToDB::operationToDB(const std::string& name, const std::string& user, c
 }
 
 // 私有函数：创建数据库连接实现
-pqxx::connection operationToDB::getConnection()
+std::shared_ptr<pqxx::connection> operationToDB::getConnection()
 {
     std::string conn_str = "dbname = " + m_dbname +
                       " user = " + m_user +
@@ -63,8 +62,8 @@ pqxx::connection operationToDB::getConnection()
                       " hostaddr = " + m_host +
                       " port = " + std::to_string(m_port);
 
-    pqxx::connection conn(conn_str);
-    if (!conn.is_open()) {
+    auto conn = std::make_shared<pqxx::connection>(conn_str);
+    if (!conn->is_open()) {
         throw std::runtime_error("无法打开数据库连接");
     }
     return conn;
@@ -75,35 +74,35 @@ void operationToDB::createAllTables()
 {
     try {
         auto conn = getConnection();
-        pqxx::work txn(conn);
+        pqxx::work txn(*conn);
 
         // 1. 创建学生表
         std::string create_student_sql = R"(
             CREATE TABLE IF NOT EXISTS students (
-                id VARCHAR(50) NOT NULL PRIMARY KEY,  -- 学生ID（字符型，用户指定）
-                name VARCHAR(50) NOT NULL,            -- 姓名
-                age SMALLINT CHECK (age > 0),         -- 年龄
-                gender VARCHAR(10) CHECK (gender IN ('男', '女', '未知')) -- 性别
+                id VARCHAR(50) NOT NULL PRIMARY KEY,
+                name VARCHAR(50) NOT NULL,
+                age SMALLINT CHECK (age > 0),
+                gender VARCHAR(10) CHECK (gender IN ('man', 'woman', 'unknown'))
             );
         )";
 
         // 2. 创建教师表
         std::string create_teacher_sql = R"(
             CREATE TABLE IF NOT EXISTS teachers (
-                id VARCHAR(50) NOT NULL PRIMARY KEY,  -- 教师ID（字符型，用户指定）
-                name VARCHAR(50) NOT NULL,            -- 姓名
-                age SMALLINT CHECK (age > 0),         -- 年龄
-                gender VARCHAR(10) CHECK (gender IN ('男', '女', '未知')) -- 性别
+                id VARCHAR(50) NOT NULL PRIMARY KEY,
+                name VARCHAR(50) NOT NULL,
+                age SMALLINT CHECK (age > 0),
+                gender VARCHAR(10) CHECK (gender IN ('man', 'woman', 'unknown'))
             );
         )";
 
-        // 3. 创建课程表
+        // 3. 新增：课程表定义
         std::string create_course_sql = R"(
             CREATE TABLE IF NOT EXISTS courses (
-                id VARCHAR(50) NOT NULL PRIMARY KEY,  -- 课程ID（字符型，用户指定）
-                course_no VARCHAR(20) NOT NULL UNIQUE,-- 课程编号
-                course_name VARCHAR(100) NOT NULL,    -- 课程名
-                credit NUMERIC(3,1) CHECK (credit >= 0) -- 学分
+                id VARCHAR(50) NOT NULL PRIMARY KEY,
+                course_no VARCHAR(20) NOT NULL UNIQUE,
+                course_name VARCHAR(100) NOT NULL,
+                credit NUMERIC(3,1) CHECK (credit >= 0)
             );
         )";
 
@@ -118,6 +117,7 @@ void operationToDB::createAllTables()
             );
         )";
 
+        // 执行建表SQL
         txn.exec(create_student_sql);
         txn.exec(create_teacher_sql);
         txn.exec(create_course_sql);
@@ -131,12 +131,13 @@ void operationToDB::createAllTables()
     }
 }
 
+
 // 插入学生/教师实现
 bool operationToDB::insertPerson(const std::string& table_name, const std::string& id, const std::string& name, int age, const std::string& gender)
 {
     try {
         auto conn = getConnection();
-        pqxx::work txn(conn);
+        pqxx::work txn(*conn);
 
         // 拼接插入SQL（动态表名）
         std::string sql = R"(
@@ -146,7 +147,6 @@ bool operationToDB::insertPerson(const std::string& table_name, const std::strin
             RETURNING id;
         )";
 
-        // 直接绑定独立参数
         pqxx::result res = txn.exec(sql, pqxx::params{id, name, age, gender});
         txn.commit();
 
@@ -168,7 +168,7 @@ bool operationToDB::insertCourse(const std::string& id, const std::string& cours
 {
     try {
         auto conn = getConnection();
-        pqxx::work txn(conn);
+        pqxx::work txn(*conn);
 
         std::string sql = R"(
             INSERT INTO courses (id, course_no, course_name, credit)
@@ -203,7 +203,7 @@ bool operationToDB::insertUserCourseRelation(const std::string& user_id, const s
 
     try {
         auto conn = getConnection();
-        pqxx::work txn(conn);
+        pqxx::work txn(*conn);
 
         // 1. 校验用户是否存在
         std::string check_user_sql = (user_type == "student")

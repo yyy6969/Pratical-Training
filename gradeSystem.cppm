@@ -1,3 +1,8 @@
+// Module   gradesystem
+// File: gradesystem.cpp   Version: 0.1.0   License: AGPLv3
+// Created:  YuHaoRan     2026-01-19 18:51:29
+// Description:总模块
+//
 export module gradesystem;
 // 导出并导入所有子分区（顺序无关，建议按依赖顺序）
 export import :person;

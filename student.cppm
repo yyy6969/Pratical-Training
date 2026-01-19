@@ -16,6 +16,7 @@ using std::shared_ptr;
 export class Student : public Person
 {
 public:
+    ~Student();
     Student(string name,int age,string gender,string id);
     string getStudentId() const;
     void studentAddCourse(shared_ptr<class Course> cla);//交互函数
@@ -36,6 +37,7 @@ string Student::getStudentId() const
     return m_sid;
 }
 
-
-
-
+Student::~Student()
+{
+    m_selected_courses.clear(); // 清空课程列表
+}

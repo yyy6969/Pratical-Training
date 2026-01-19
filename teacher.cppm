@@ -18,13 +18,12 @@ using std::vector;
 export class Teacher:public Person
 {
 public:
+    ~Teacher();
     Teacher(string name,int age,string gender,string id);
     string getTeacherId() const;
     void teacherAddCourse(shared_ptr<class Course> course);
 
     bool hasCourse() const;//新增：判断是否已分配课程（避免重复分配）
-
-    ~Teacher() = default;
 private:
     string m_tid;//老师id
     shared_ptr<class Course> m_teach_course;// 核心：只存1门课（替代vector，贴合“只能教1门”的需求）
@@ -48,4 +47,7 @@ bool Teacher::hasCourse() const
     return m_teach_course != nullptr;
 }
 
-
+Teacher::~Teacher()
+{
+    m_teach_course.reset(); // 显式重置智能指针，避免析构时重复释放
+}
