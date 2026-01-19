@@ -10,6 +10,7 @@ import :course;
 import :teacher;
 import :system;
 
+
 using std::vector; using std::shared_ptr;
 using std::string; using std::weak_ptr;
 
@@ -20,8 +21,6 @@ public:
     static Arrangement& singletonArrange();
     void teacherArrangeCourse(string tid,string cid);
 private:
-    //vector<shared_ptr<Course>> _courseList;
-    //vector<shared_ptr<Teacher>> _teacherList;
 };
 
 Arrangement& Arrangement::singletonArrange()

@@ -7,6 +7,11 @@ set(CMAKE_CXX_MODULE_STD ON)
 
 project(gradeSystem LANGUAGES CXX)
 
+# 1. 先找pkg-config工具（系统级库查找）
+find_package(PkgConfig REQUIRED)
+# 2. 通过pkg-config查找libpqxx，初始化PQXX_*变量
+pkg_check_modules(PQXX REQUIRED IMPORTED_TARGET libpqxx)
+
 # set(MODULE_LIB_DIR1 /opt/utils/modules)  # 模块库的目录的设置
 add_executable(gradeSystem
     #math.cpp                              # 模块实现单元
@@ -69,13 +74,9 @@ target_sources(gradeSystem  PRIVATE FILE_SET cxx_modules TYPE CXX_MODULES
         ${CMAKE_CURRENT_SOURCE_DIR}
     FILES ${MODULE_INTERFACE_FILES} ${UI_FILES}  ${DOMAIN_FILES} ${OPERATE_FILES} ${sqlDB_FILES} ${CONTROL_FILES}
 )
+target_link_libraries(gradeSystem PRIVATE PkgConfig::PQXX)
+
 target_compile_features(gradeSystem PRIVATE cxx_std_23)
-
-# 链接 pqxx 库（关键：原配置缺失数据库库链接）
-target_include_directories(gradeSystem PRIVATE ${PQXX_INCLUDE_DIRS})
-target_link_directories(gradeSystem PRIVATE ${PQXX_LIBRARY_DIRS})
-target_link_libraries(gradeSystem PRIVATE ${PQXX_LIBRARIES})
-
 
 
 

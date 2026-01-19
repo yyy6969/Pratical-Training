@@ -129,7 +129,7 @@ bool operationToDB::insertPerson(const string& table_name, const string& id, con
         )";
 
         // 直接绑定独立参数
-        pqxx::result res = txn.exec_params(sql, id, name, age, gender);
+        pqxx::result res = txn.exec(sql, pqxx::params{id, name, age, gender});
         txn.commit();
 
         // 判断插入结果
@@ -159,7 +159,7 @@ bool operationToDB::insertCourse(const string& id, const string& course_no, cons
             RETURNING id;
         )";
 
-        pqxx::result res = txn.exec_params(sql, id, course_no, course_name, credit);
+        pqxx::result res = txn.exec(sql, pqxx::params{id, course_no, course_name, credit});
         txn.commit();
 
         if (res.empty()) {
@@ -191,7 +191,7 @@ bool operationToDB::insertUserCourseRelation(const string& user_id, const string
         string check_user_sql = (user_type == "student")
             ? "SELECT id FROM students WHERE id = $1;"
             : "SELECT id FROM teachers WHERE id = $1;";
-        pqxx::result user_res = txn.exec_params(check_user_sql, user_id);
+        pqxx::result user_res = txn.exec(check_user_sql, pqxx::params{user_id});
         if (user_res.empty()) {
             cerr << "[ERROR] " << user_type << " ID=" << user_id << " 不存在\n";
             txn.abort();
@@ -200,7 +200,7 @@ bool operationToDB::insertUserCourseRelation(const string& user_id, const string
 
         // 2. 校验课程是否存在
         string check_course_sql = "SELECT id FROM courses WHERE id = $1;";
-        pqxx::result course_res = txn.exec_params(check_course_sql, course_id);
+        pqxx::result course_res = txn.exec(check_course_sql, pqxx::params{course_id});
         if (course_res.empty()) {
             cerr << "[ERROR] 课程ID=" << course_id << " 不存在\n";
             txn.abort();
@@ -213,7 +213,7 @@ bool operationToDB::insertUserCourseRelation(const string& user_id, const string
             VALUES ($1, $2, $3)
             ON CONFLICT (user_id, user_type, course_id) DO NOTHING;
         )";
-        pqxx::result res = txn.exec_params(insert_sql, user_id, user_type, course_id);
+        pqxx::result res = txn.exec(insert_sql, pqxx::params{user_id, user_type, course_id});
         txn.commit();
 
         if (res.affected_rows() > 0) {

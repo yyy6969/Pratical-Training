@@ -20,8 +20,6 @@ public:
     static Enrollment& singletonEnroll();
     void studentEnrollCourse(string sid,string cid);//完成学生添加课程
 private:
-    //vector<shared_ptr<Student>> _studentList;
-    //vector<shared_ptr<Course>> _courseList;
 };
 
 Enrollment::Enrollment()
